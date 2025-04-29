@@ -43,7 +43,7 @@ class TestCustomerPurchaseAnalysis(unittest.TestCase):
                 print("TestCreateDataFrame = Failed")
         except Exception as e:
             self.test_obj.yakshaAssert("TestCreateDataFrame", False, "functional")
-            print(f"TestCreateDataFrame = Failed ")
+            print(f"TestCreateDataFrame = Failed | Exception: {e}")
 
     def test_average_spending(self):
         try:
@@ -59,7 +59,7 @@ class TestCustomerPurchaseAnalysis(unittest.TestCase):
                 print("TestAverageSpending = Failed")
         except Exception as e:
             self.test_obj.yakshaAssert("TestAverageSpending", False, "functional")
-            print(f"TestAverageSpending = Failed ")
+            print(f"TestAverageSpending = Failed | Exception: {e}")
 
     def test_top_spenders(self):
         try:
@@ -81,7 +81,7 @@ class TestCustomerPurchaseAnalysis(unittest.TestCase):
                 print("TestTopSpenders = Failed")
         except Exception as e:
             self.test_obj.yakshaAssert("TestTopSpenders", False, "functional")
-            print(f"TestTopSpenders = Failed ")
+            print(f"TestTopSpenders = Failed | Exception: {e}")
 
 
 
@@ -137,10 +137,10 @@ class TestInventoryManagement(unittest.TestCase):
             else:
                 self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
                 print("TestGetLowStockItems = Failed")
-
+                print("Expected:", expected_result, "| Got:", result)
         except Exception as e:
             self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
-            print(f"TestGetLowStockItems = Failed ")
+            print(f"TestGetLowStockItems = Failed | Exception: {e}")
 
     def test_calculate_inventory_value(self):
         try:
@@ -154,106 +154,79 @@ class TestInventoryManagement(unittest.TestCase):
             else:
                 self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
                 print("TestCalculateInventoryValue = Failed")
-
+                print("Expected:", expected_result, "| Got:", result)
         except Exception as e:
             self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
-            print(f"TestCalculateInventoryValue = Failed ")
+            print(f"TestCalculateInventoryValue = Failed | Exception: {e}")
 
 
 if __name__ == '__main__':
     unittest.main()
 
+# TestWeatherAnalysis.py
 import unittest
 import sys
 import os
 
-# Adjusting the path to import TestUtils and the weather module
+# Adjusting the path to import TestUtils and WeatherAnalysis
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from test.TestUtils import TestUtils
 from WeatherAnalysis import (
     weather_analysis,
-    save_report_to_file
 )
-
 
 class TestWeatherAnalysis(unittest.TestCase):
     def setUp(self):
-        # Initialize TestUtils object for yaksha assertions
         self.test_obj = TestUtils()
-
-        # Sample temperature dataset
+        self.real_filename = "weather_report.txt"
         self.temperatures = {32.5, 34.0, 31.2, 29.8, 35.5}
-        self.expected_sorted_temps = [29.8, 31.2, 32.5, 34.0, 35.5]
-        self.expected_max_temp = 35.5
-        self.expected_min_temp = 29.8
-        self.expected_extreme_temps = [29.8, 35.5]
-        self.expected_report = f"""
-    Weather Analysis Report
-    ------------------------
-    Temperatures (°C): {self.expected_sorted_temps}
-    Highest Temperature: {self.expected_max_temp}
-    Lowest Temperature: {self.expected_min_temp}
-    Extreme Temperatures Detected: {self.expected_extreme_temps}
-    """
+
+        # Expected values to match
+        self.expected_sorted_temps = "[29.8, 31.2, 32.5, 34.0, 35.5]"
+        self.expected_max_temp = "35.5"
+        self.expected_min_temp = "29.8"
+        self.expected_extreme_temps = "[29.8, 35.5]"
 
     def test_weather_analysis(self):
         try:
-            # Perform weather analysis
+            # Test the FUNCTION OUTPUT directly
             report = weather_analysis(self.temperatures)
 
-            # Verify the content of the report
             result = (
-                    f"Temperatures (°C): {self.expected_sorted_temps}" in report and
-                    f"Highest Temperature: {self.expected_max_temp}" in report and
-                    f"Lowest Temperature: {self.expected_min_temp}" in report and
-                    f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in report
+                f"Temperatures (°C): {self.expected_sorted_temps}" in report and
+                f"Highest Temperature: {self.expected_max_temp}" in report and
+                f"Lowest Temperature: {self.expected_min_temp}" in report and
+                f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in report
             )
 
-            if result:
-                self.test_obj.yakshaAssert("TestWeatherAnalysis", True, "functional")
-                print("TestWeatherAnalysis = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
-                print("TestWeatherAnalysis = Failed")
-                print("Expected Report:\n", self.expected_report)
-                print("Actual Report:\n", report)
+            self.test_obj.yakshaAssert("TestWeatherAnalysis", result, "functional")
+            print(f"TestWeatherAnalysis = {'Passed' if result else 'Failed'}")
         except Exception as e:
             self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
             print(f"TestWeatherAnalysis = Failed | Exception: {e}")
 
-    def test_save_report_to_file(self):
+    def test_check_real_weather_report(self):
         try:
-            # Filename for testing
-            test_filename = "test_weather_report.txt"
-
-            # Save report to file
-            save_report_to_file(self.expected_report, test_filename)
-
-            # Check if file exists and has the correct content
-            if os.path.exists(test_filename):
-                with open(test_filename, "r", encoding="utf-8") as file:
+            # Test the FILE CONTENT
+            if os.path.exists(self.real_filename):
+                with open(self.real_filename, "r", encoding="utf-8") as file:
                     content = file.read()
-                    result = self.expected_report.strip() in content.strip()
 
-                    if result:
-                        self.test_obj.yakshaAssert("TestSaveReportToFile", True, "functional")
-                        print("TestSaveReportToFile = Passed")
-                    else:
-                        self.test_obj.yakshaAssert("TestSaveReportToFile", False, "functional")
-                        print("TestSaveReportToFile = Failed")
-                        print("Expected Content:\n", self.expected_report)
-                        print("Actual Content:\n", content)
+                    result = (
+                        f"Temperatures (°C): {self.expected_sorted_temps}" in content and
+                        f"Highest Temperature: {self.expected_max_temp}" in content and
+                        f"Lowest Temperature: {self.expected_min_temp}" in content and
+                        f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in content
+                    )
+
+                    self.test_obj.yakshaAssert("TestRealWeatherReport", result, "functional")
+                    print(f"TestRealWeatherReport = {'Passed' if result else 'Failed'}")
             else:
-                self.test_obj.yakshaAssert("TestSaveReportToFile", False, "functional")
-                print("TestSaveReportToFile = Failed | File not found")
-
-            # Clean up
-            if os.path.exists(test_filename):
-                os.remove(test_filename)
+                self.test_obj.yakshaAssert("TestRealWeatherReport", False, "functional")
+                print("TestRealWeatherReport = Failed | File not found")
         except Exception as e:
-            self.test_obj.yakshaAssert("TestSaveReportToFile", False, "functional")
-            print(f"TestSaveReportToFile = Failed | Exception: {e}")
-
+            self.test_obj.yakshaAssert("TestRealWeatherReport", False, "functional")
+            print(f"TestRealWeatherReport = Failed | Exception: {e}")
 
 if __name__ == '__main__':
     unittest.main()
