@@ -59,7 +59,7 @@ class TestCustomerPurchaseAnalysis(unittest.TestCase):
                 print("TestAverageSpending = Failed")
         except Exception as e:
             self.test_obj.yakshaAssert("TestAverageSpending", False, "functional")
-            print(f"TestAverageSpending = Failed | Exception: {e}")
+            print(f"TestAverageSpending = Failed ")
 
     def test_top_spenders(self):
         try:
@@ -81,7 +81,7 @@ class TestCustomerPurchaseAnalysis(unittest.TestCase):
                 print("TestTopSpenders = Failed")
         except Exception as e:
             self.test_obj.yakshaAssert("TestTopSpenders", False, "functional")
-            print(f"TestTopSpenders = Failed | Exception: {e}")
+            print(f"TestTopSpenders = Failed")
 
 
 
@@ -137,10 +137,10 @@ class TestInventoryManagement(unittest.TestCase):
             else:
                 self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
                 print("TestGetLowStockItems = Failed")
-                print("Expected:", expected_result, "| Got:", result)
+                
         except Exception as e:
             self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
-            print(f"TestGetLowStockItems = Failed | Exception: {e}")
+            print(f"TestGetLowStockItems = Failed ")
 
     def test_calculate_inventory_value(self):
         try:
@@ -154,10 +154,10 @@ class TestInventoryManagement(unittest.TestCase):
             else:
                 self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
                 print("TestCalculateInventoryValue = Failed")
-                print("Expected:", expected_result, "| Got:", result)
+                
         except Exception as e:
             self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
-            print(f"TestCalculateInventoryValue = Failed | Exception: {e}")
+            print(f"TestCalculateInventoryValue = Failed")
 
 
 if __name__ == '__main__':
@@ -203,7 +203,7 @@ class TestWeatherAnalysis(unittest.TestCase):
             print(f"TestWeatherAnalysis = {'Passed' if result else 'Failed'}")
         except Exception as e:
             self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
-            print(f"TestWeatherAnalysis = Failed | Exception: {e}")
+            print(f"TestWeatherAnalysis = Failed }")
 
     def test_check_real_weather_report(self):
         try:
@@ -226,7 +226,7 @@ class TestWeatherAnalysis(unittest.TestCase):
                 print("TestRealWeatherReport = Failed | File not found")
         except Exception as e:
             self.test_obj.yakshaAssert("TestRealWeatherReport", False, "functional")
-            print(f"TestRealWeatherReport = Failed | Exception: {e}")
+            print(f"TestRealWeatherReport = Failed ")
 
 if __name__ == '__main__':
     unittest.main()
