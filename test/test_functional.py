@@ -203,7 +203,7 @@ class TestWeatherAnalysis(unittest.TestCase):
             print(f"TestWeatherAnalysis = {'Passed' if result else 'Failed'}")
         except Exception as e:
             self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
-            print(f"TestWeatherAnalysis = Failed }")
+            print(f"TestWeatherAnalysis = Failed ")
 
     def test_check_real_weather_report(self):
         try:
