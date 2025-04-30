@@ -205,7 +205,7 @@ class TestWeatherAnalysis(unittest.TestCase):
             self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
             print(f"TestWeatherAnalysis = Failed ")
 
-    def test_check_real_weather_report(self):
+    def test_save_report_to_file(self):
         try:
             # Test the FILE CONTENT
             if os.path.exists(self.real_filename):
@@ -219,14 +219,14 @@ class TestWeatherAnalysis(unittest.TestCase):
                         f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in content
                     )
 
-                    self.test_obj.yakshaAssert("TestRealWeatherReport", result, "functional")
-                    print(f"TestRealWeatherReport = {'Passed' if result else 'Failed'}")
+                    self.test_obj.yakshaAssert("test_save_report_to_file", result, "functional")
+                    print(f"test_save_report_to_file = {'Passed' if result else 'Failed'}")
             else:
-                self.test_obj.yakshaAssert("TestRealWeatherReport", False, "functional")
-                print("TestRealWeatherReport = Failed | File not found")
+                self.test_obj.yakshaAssert("test_save_report_to_file", False, "functional")
+                print("test_save_report_to_file = Failed | File not found")
         except Exception as e:
-            self.test_obj.yakshaAssert("TestRealWeatherReport", False, "functional")
-            print(f"TestRealWeatherReport = Failed ")
+            self.test_obj.yakshaAssert("test_save_report_to_file", False, "functional")
+            print(f"test_save_report_to_file = Failed | Exception: {e}")
 
 if __name__ == '__main__':
     unittest.main()
