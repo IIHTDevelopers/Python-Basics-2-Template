@@ -1,10 +1,4 @@
-
-def get_low_stock_items(inventory, reorder_level):
-    return [item for item, stock in inventory if stock < reorder_level]
-
-def calculate_inventory_value(inventory, prices):
-    return sum(stock * prices[item] for item, stock in inventory if item in prices)
-
+# Dataset for test-taker reference (do not modify)
 inventory_data = [
     ("Tablet", 8),
     ("Pen Drive", 60),
@@ -21,6 +15,22 @@ item_prices = {
     "HDMI Cable": 10
 }
 
+def get_low_stock_items(inventory, reorder_level):
+    """
+    TODO: Return a list of item names whose stock is less than reorder_level.
+    """
+    pass
+
+
+def calculate_inventory_value(inventory, prices):
+    """
+    TODO: Calculate and return total inventory value 
+    as (quantity * unit price) for each item.
+    """
+    pass
+
+
+# Sample function calls (expected output should match test cases)
 low_stock_items = get_low_stock_items(inventory_data, 10)
 print("Items to Restock:", low_stock_items)
 
