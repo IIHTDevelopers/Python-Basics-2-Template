@@ -1,232 +1,137 @@
 import unittest
-import pandas as pd
-import numpy as np
-import sys
 import os
-
-# Adjusting the path to import the refactored script and TestUtils
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import pandas as pd
 from test.TestUtils import TestUtils
-from CustomerPurchaseAnalysis import (
-    create_dataframe,
-    calculate_average_spending,
-    get_top_spenders,
 
-)
+from CustomerPurchaseAnalysis import *
+from InventoryManagement import *
+from WeatherAnalysis import *
 
-
-class TestCustomerPurchaseAnalysis(unittest.TestCase):
-    def setUp(self):
-        # Initialize the TestUtils object
-        self.test_obj = TestUtils()
-        # Create the DataFrame using the refactored function
-        self.df = create_dataframe()
-        # Calculate the average spending for testing
-        self.average_spending = calculate_average_spending(self.df)
+class TestCustomerPurchaseNew(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
 
     def test_create_dataframe(self):
         try:
-            # Check if DataFrame is created correctly
-            expected_data = {
-                'Customer': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],
-                'Items_Bought': [3, 7, 5, 2, 9],
-                'Amount_Spent': [150.0, 400.0, 275.0, 100.0, 600.0]
-            }
-            expected_df = pd.DataFrame(expected_data)
-            result = self.df.equals(expected_df)
-
-            if result:
-                self.test_obj.yakshaAssert("TestCreateDataFrame", True, "functional")
-                print("TestCreateDataFrame = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestCreateDataFrame", False, "functional")
-                print("TestCreateDataFrame = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestCreateDataFrame", False, "functional")
-            print(f"TestCreateDataFrame = Failed | Exception: {e}")
+            df = create_dataframe()
+            self.assertEqual(len(df), 5)
+            self.assertListEqual(list(df.columns), ['Customer', 'Items_Bought', 'Amount_Spent'])
+            self.test_obj.yakshaAssert("test_create_dataframe", True, "functional")
+            print("test_create_dataframe = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_create_dataframe", False, "exception")
+            print("test_create_dataframe = Failed")
 
     def test_average_spending(self):
         try:
-            # Check the average spending
-            expected_average = np.mean([150.0, 400.0, 275.0, 100.0, 600.0])
-            result = round(self.average_spending, 2) == round(expected_average, 2)
-
-            if result:
-                self.test_obj.yakshaAssert("TestAverageSpending", True, "functional")
-                print("TestAverageSpending = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestAverageSpending", False, "functional")
-                print("TestAverageSpending = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestAverageSpending", False, "functional")
-            print(f"TestAverageSpending = Failed ")
+            df = create_dataframe()
+            avg = calculate_average_spending(df)
+            self.assertEqual(avg, 375.0)
+            self.test_obj.yakshaAssert("test_average_spending", True, "functional")
+            print("test_average_spending = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_average_spending", False, "exception")
+            print("test_average_spending = Failed")
 
     def test_top_spenders(self):
         try:
-            # Identify customers who spent above the average
-            top_spenders = get_top_spenders(self.df, self.average_spending)
-            expected_top_spenders = pd.DataFrame({
-                'Customer': ['Bob', 'Eve'],
-                'Items_Bought': [7, 9],
-                'Amount_Spent': [400.0, 600.0]
-            }).reset_index(drop=True)
+            df = create_dataframe()
+            avg = calculate_average_spending(df)
+            top_df = get_top_spenders(df, avg)
 
-            result = top_spenders.reset_index(drop=True).equals(expected_top_spenders)
+            # Check that there are 2 top spenders
+            self.assertEqual(len(top_df), 2)
 
-            if result:
-                self.test_obj.yakshaAssert("TestTopSpenders", True, "functional")
-                print("TestTopSpenders = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestTopSpenders", False, "functional")
-                print("TestTopSpenders = Failed")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestTopSpenders", False, "functional")
-            print(f"TestTopSpenders = Failed")
+            # Check that their names are Mike and Leo
+            self.assertIn("Mike", top_df['Customer'].values)
+            self.assertIn("Leo", top_df['Customer'].values)
 
+            # Optionally, ensure ONLY Mike and Leo are in result
+            self.assertSetEqual(set(top_df['Customer'].values), {"Mike", "Leo"})
 
-
-if __name__ == '__main__':
-    unittest.main()
-
-import unittest
-import sys
-import os
-
-# Adjusting the path to import TestUtils and the inventory module
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from test.TestUtils import TestUtils
-from InventoryManagement import (
-    get_low_stock_items,
-    calculate_inventory_value,
-
-)
+            self.test_obj.yakshaAssert("test_top_spenders", True, "functional")
+            print("test_top_spenders = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_top_spenders", False, "exception")
+            print("test_top_spenders = Failed")
 
 
-class TestInventoryManagement(unittest.TestCase):
-    def setUp(self):
-        # Initialize TestUtils object for yaksha assertions
-        self.test_obj = TestUtils()
-
-        # Dataset: Inventory and Prices
-        self.inventory_data = [
-            ("Laptop", 5),
-            ("Mouse", 20),
-            ("Keyboard", 12),
-            ("Monitor", 3),
-            ("USB Drive", 50)
-        ]
-
-        self.item_prices = {
-            "Laptop": 1000,
-            "Mouse": 25,
-            "Keyboard": 80,
-            "Monitor": 300,
-            "USB Drive": 15
+class TestInventoryManagementNew(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
+        cls.inventory = [("Tablet", 8), ("Pen Drive", 60), ("Router", 4), ("Camera", 2), ("HDMI Cable", 30)]
+        cls.prices = {
+            "Tablet": 300,
+            "Pen Drive": 20,
+            "Router": 100,
+            "Camera": 500,
+            "HDMI Cable": 10
         }
-        self.reorder_level = 10
 
-    def test_get_low_stock_items(self):
+    def test_new_low_stock_items(self):
         try:
-            # Get low stock items
-            result = get_low_stock_items(self.inventory_data, self.reorder_level)
-            expected_result = ["Laptop", "Monitor"]
+            result = get_low_stock_items(self.inventory, 10)
+            expected = ['Tablet', 'Router', 'Camera']
+            self.assertSetEqual(set(result), set(expected))
+            self.test_obj.yakshaAssert("test_new_low_stock_items", True, "functional")
+            print("test_new_low_stock_items = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_new_low_stock_items", False, "exception")
+            print("test_new_low_stock_items = Failed")
 
-            if result == expected_result:
-                self.test_obj.yakshaAssert("TestGetLowStockItems", True, "functional")
-                print("TestGetLowStockItems = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
-                print("TestGetLowStockItems = Failed")
-                
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestGetLowStockItems", False, "functional")
-            print(f"TestGetLowStockItems = Failed ")
 
-    def test_calculate_inventory_value(self):
+    def test_new_inventory_value(self):
         try:
-            # Calculate total inventory value
-            result = calculate_inventory_value(self.inventory_data, self.item_prices)
-            expected_result = 8110
-
-            if result == expected_result:
-                self.test_obj.yakshaAssert("TestCalculateInventoryValue", True, "functional")
-                print("TestCalculateInventoryValue = Passed")
-            else:
-                self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
-                print("TestCalculateInventoryValue = Failed")
-                
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestCalculateInventoryValue", False, "functional")
-            print(f"TestCalculateInventoryValue = Failed")
+            value = calculate_inventory_value(self.inventory, self.prices)
+            expected = 8*300 + 60*20 + 4*100 + 2*500 + 30*10  # = 5300
+            self.assertEqual(value, expected)
+            self.test_obj.yakshaAssert("test_new_inventory_value", True, "functional")
+            print("test_new_inventory_value = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_new_inventory_value", False, "exception")
+            print("test_new_inventory_value = Failed")
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestWeatherFileUseCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.test_obj = TestUtils()
+        cls.filename = "temperatures.txt"
+        # Write test file
+        with open(cls.filename, "w") as f:
+            f.write("28.5\n30.0\n33.7\n36.1\n29.0\n")
+        cls.expected_temps = [28.5, 30.0, 33.7, 36.1, 29.0]
 
-# TestWeatherAnalysis.py
-import unittest
-import sys
-import os
+    @classmethod
+    def tearDownClass(cls):
+        if os.path.exists(cls.filename):
+            os.remove(cls.filename)
 
-# Adjusting the path to import TestUtils and WeatherAnalysis
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from test.TestUtils import TestUtils
-from WeatherAnalysis import (
-    weather_analysis,
-)
-
-class TestWeatherAnalysis(unittest.TestCase):
-    def setUp(self):
-        self.test_obj = TestUtils()
-        self.real_filename = "weather_report.txt"
-        self.temperatures = {32.5, 34.0, 31.2, 29.8, 35.5}
-
-        # Expected values to match
-        self.expected_sorted_temps = "[29.8, 31.2, 32.5, 34.0, 35.5]"
-        self.expected_max_temp = "35.5"
-        self.expected_min_temp = "29.8"
-        self.expected_extreme_temps = "[29.8, 35.5]"
-
-    def test_weather_analysis(self):
+    def test_read_temperatures(self):
         try:
-            # Test the FUNCTION OUTPUT directly
-            report = weather_analysis(self.temperatures)
+            temps = read_temperatures_from_file(self.filename)
+            self.assertEqual(temps, self.expected_temps)
+            self.test_obj.yakshaAssert("test_read_temperatures", True, "functional")
+            print("test_read_temperatures = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_read_temperatures", False, "exception")
+            print("test_read_temperatures = Failed")
 
-            result = (
-                f"Temperatures (°C): {self.expected_sorted_temps}" in report and
-                f"Highest Temperature: {self.expected_max_temp}" in report and
-                f"Lowest Temperature: {self.expected_min_temp}" in report and
-                f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in report
-            )
-
-            self.test_obj.yakshaAssert("TestWeatherAnalysis", result, "functional")
-            print(f"TestWeatherAnalysis = {'Passed' if result else 'Failed'}")
-        except Exception as e:
-            self.test_obj.yakshaAssert("TestWeatherAnalysis", False, "functional")
-            print(f"TestWeatherAnalysis = Failed ")
-
-    def test_save_report_to_file(self):
+    def test_analyze_temperature_values(self):
         try:
-            # Test the FILE CONTENT
-            if os.path.exists(self.real_filename):
-                with open(self.real_filename, "r", encoding="utf-8") as file:
-                    content = file.read()
+            report = analyze_temperatures(self.expected_temps)
+            self.assertIn("Highest Temperature: 36.1", report)
+            self.assertIn("Lowest Temperature: 28.5", report)
+            self.assertIn("Extreme Temperatures Detected: [28.5, 29.0, 36.1]", report)
+            self.test_obj.yakshaAssert("test_analyze_temperature_values", True, "functional")
+            print("test_analyze_temperature_values = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_analyze_temperature_values", False, "exception")
+            print("test_analyze_temperature_values = Failed")
 
-                    result = (
-                        f"Temperatures (°C): {self.expected_sorted_temps}" in content and
-                        f"Highest Temperature: {self.expected_max_temp}" in content and
-                        f"Lowest Temperature: {self.expected_min_temp}" in content and
-                        f"Extreme Temperatures Detected: {self.expected_extreme_temps}" in content
-                    )
 
-                    self.test_obj.yakshaAssert("test_save_report_to_file", result, "functional")
-                    print(f"test_save_report_to_file = {'Passed' if result else 'Failed'}")
-            else:
-                self.test_obj.yakshaAssert("test_save_report_to_file", False, "functional")
-                print("test_save_report_to_file = Failed | File not found")
-        except Exception as e:
-            self.test_obj.yakshaAssert("test_save_report_to_file", False, "functional")
-            print(f"test_save_report_to_file = Failed | Exception: {e}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
