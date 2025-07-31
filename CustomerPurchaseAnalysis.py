@@ -1,48 +1,28 @@
 import pandas as pd
 
+# Predefined dataset for testing
+data = {
+    'Customer': ['Jane', 'Mike', 'Tom', 'Sara', 'Leo'],
+    'Items_Bought': [4, 8, 6, 1, 10],
+    'Amount_Spent': [200.0, 500.0, 350.0, 75.0, 750.0]
+}
 
 def create_dataframe():
     """
-    Create and return a DataFrame containing customer purchase data.
+    TODO: Create and return a pandas DataFrame using the provided dataset.
     """
-    # Predefined customer purchase dataset
-    data = {
-        'Customer': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],
-        'Items_Bought': [3, 7, 5, 2, 9],
-        'Amount_Spent': [150.0, 400.0, 275.0, 100.0, 600.0]
-    }
-    # TODO: Create DataFrame from 'data'
     pass
 
 
 def calculate_average_spending(df):
     """
-    Calculate and return the average spending amount.
+    TODO: Calculate and return the average of the 'Amount_Spent' column.
     """
-    # TODO: Calculate mean of 'Amount_Spent'
     pass
 
 
 def get_top_spenders(df, average_spending):
     """
-    Identify and return customers who spent above the average amount.
+    TODO: Return only those customers who spent above the average.
     """
-    # TODO: Filter customers spending above the average
     pass
-
-
-def main():
-    """
-    Main function to execute customer purchase analysis.
-    """
-    # TODO: Create DataFrame
-    # TODO: Calculate average spending
-    # TODO: Identify and print top spenders
-
-    # TODO: Print the DataFrame
-    # TODO: Display high-spending customers
-    pass
-
-
-if __name__ == "__main__":
-    main()
