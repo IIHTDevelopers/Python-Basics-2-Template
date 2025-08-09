@@ -17,7 +17,7 @@ item_prices = {
 
 def get_low_stock_items(inventory, reorder_level):
     """
-    TODO: Return a list of item names whose stock is less than reorder_level.
+    TODO: Return a list of item names whose stock is less than reorder_level which is below 10
     """
     pass
 
@@ -36,3 +36,4 @@ print("Items to Restock:", low_stock_items)
 
 total_inventory_value = calculate_inventory_value(inventory_data, item_prices)
 print("Total Inventory Value: $", total_inventory_value)
+
