@@ -1,6 +1,7 @@
 def read_temperatures_from_file(filename):
     """
-    TODO: Read float temperatures from the file and return as a list.
+    you will need to create the temperatures.txt and place the inputvalues  from the document 
+    TODO: Read float temperatures from the file and return as a list with the float values .
     Handle file not found error gracefully.
     """
     pass
@@ -25,3 +26,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
