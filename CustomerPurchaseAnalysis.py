@@ -1,6 +1,6 @@
 import pandas as pd
 
-# Predefined dataset for testing
+# Predefined dataset for testing # move the dataset inside the first function def create_dataframe():
 data = {
     'Customer': ['Jane', 'Mike', 'Tom', 'Sara', 'Leo'],
     'Items_Bought': [4, 8, 6, 1, 10],
@@ -26,3 +26,4 @@ def get_top_spenders(df, average_spending):
     TODO: Return only those customers who spent above the average.
     """
     pass
+
