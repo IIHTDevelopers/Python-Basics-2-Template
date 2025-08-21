@@ -120,26 +120,26 @@ class TestWeatherFileUseCase(unittest.TestCase):
             print("test_read_temperatures = Failed")
 
     def test_analyze_temperature_values(self):
-    try:
-        report = analyze_temperatures(self.expected_temps)
+        try:
+            report = analyze_temperatures(self.expected_temps)
 
-        # Extract numbers from the report
-        import re
-        numbers = re.findall(r"\d+\.\d+", report)
-        numbers = [float(num) for num in numbers]
+            # Extract numbers from the report
+            import re
+            numbers = re.findall(r"\d+\.\d+", report)
+            numbers = [float(num) for num in numbers]
 
-        # Check values regardless of wording or case
-        self.assertIn(36.1, numbers)  # highest temperature
-        self.assertIn(28.5, numbers)  # lowest temperature
-        self.assertIn(29.0, numbers)  # extreme temperature
-        self.assertIn(36.1, numbers)  # extreme temperature
-        self.assertIn(28.5, numbers)  # extreme temperature
+            # Check values regardless of wording or case
+            self.assertIn(36.1, numbers)  # highest temperature
+            self.assertIn(28.5, numbers)  # lowest temperature
+            self.assertIn(29.0, numbers)  # extreme temperature
+            self.assertIn(36.1, numbers)  # extreme temperature
+            self.assertIn(28.5, numbers)  # extreme temperature
 
-        self.test_obj.yakshaAssert("test_analyze_temperature_values", True, "functional")
-        print("test_analyze_temperature_values = Passed")
-    except Exception:
-        self.test_obj.yakshaAssert("test_analyze_temperature_values", False, "exception")
-        print("test_analyze_temperature_values = Failed")
+            self.test_obj.yakshaAssert("test_analyze_temperature_values", True, "functional")
+            print("test_analyze_temperature_values = Passed")
+        except Exception:
+            self.test_obj.yakshaAssert("test_analyze_temperature_values", False, "exception")
+            print("test_analyze_temperature_values = Failed")
 
 
 
